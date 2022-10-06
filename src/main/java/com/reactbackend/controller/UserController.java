@@ -2,16 +2,14 @@ package com.reactbackend.controller;
 
 import com.reactbackend.model.MessageDto;
 import com.reactbackend.model.Post.Post;
-import com.reactbackend.model.User.User;
-import com.reactbackend.model.User.UserDTO;
-import com.reactbackend.model.User.UserFollowDTO;
-import com.reactbackend.model.User.UserLoginRequest;
+import com.reactbackend.model.User.*;
 import com.reactbackend.service.UserService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Set;
 
 @RestController
 @RequestMapping("/api/user")
@@ -47,6 +45,32 @@ public class UserController {
         return userService.followUser(username, user);
     }
 
+    @PostMapping("/removeFollow/{username}")
+    public MessageDto unfollowUser(@PathVariable String username, @RequestBody UserFollowDTO user){
+        return userService.unfollow(username, user);
+    }
+
+    @GetMapping("/profile/{username}/followers")
+    public Set<User> getFollowers(@PathVariable String username){
+        return userService.getFollowers(username);
+    }
+    @GetMapping("/profile/{username}/following")
+    public List<User> getFollowing(@PathVariable String username){
+        return userService.getFollowing(username);
+    }
+
+    @PostMapping("/profile/getHomeFeed")
+    public List<Post> getFeed(@RequestBody UserFollowDTO user){
+        return userService.getFeed(user);
+    }
+    @PostMapping("/doesUsernameExist")
+    public boolean doesExist(@RequestBody UserExist user){
+        return userService.doesExist(user);
+    }
+    @PostMapping("/doesEmailExist")
+    public boolean doesEmailExist(@RequestBody UserEmailExist user){
+        return userService.doesExist(user);
+    }
     @GetMapping("/list")
     public List<User> showUsers(){
         return userService.showUsers();

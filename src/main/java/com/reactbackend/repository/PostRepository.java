@@ -9,8 +9,10 @@ import java.util.List;
 public interface PostRepository extends CrudRepository<Post, Long> {
     long countByAuthor(User author);
     List<Post> findByAuthor_Username(String username);
-
     List<Post> findByTitleContainsIgnoreCaseOrBodyContainsIgnoreCase(String title, String body);
+
+    List<Post> findByAuthor_Followers_UsernameIgnoreCase(String username);
+
 
 
 

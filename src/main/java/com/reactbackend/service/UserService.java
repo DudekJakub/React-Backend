@@ -2,10 +2,7 @@ package com.reactbackend.service;
 
 import com.reactbackend.model.MessageDto;
 import com.reactbackend.model.Post.Post;
-import com.reactbackend.model.User.User;
-import com.reactbackend.model.User.UserDTO;
-import com.reactbackend.model.User.UserFollowDTO;
-import com.reactbackend.model.User.UserLoginRequest;
+import com.reactbackend.model.User.*;
 import com.reactbackend.repository.PostRepository;
 import com.reactbackend.repository.UserRepository;
 import lombok.AllArgsConstructor;
@@ -19,6 +16,7 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 @Service
 @AllArgsConstructor
@@ -98,12 +96,49 @@ public class UserService implements UserDetailsService {
         }
         userRepository.save(userToFollow);
         userRepository.save(user);
-        System.out.println(userToFollow.getFollowers());
         return new MessageDto("Success");
     }
 
     private boolean alreadyFollows(User user, User userToFollow){
         System.out.println(userToFollow.getFollowers());
         return userToFollow.getFollowers().contains(user);
+    }
+
+    public MessageDto unfollow(String username, UserFollowDTO userWhoVisits) {
+        User user = userRepository.findById(userWhoVisits.getId()).orElseThrow();
+        User userToUnfollow = userRepository.findByUsername(username).orElseThrow();
+        if(userToUnfollow.getFollowers().contains(user)){
+            userToUnfollow.getFollowers().remove(user);
+            userToUnfollow.setFollowerCount(Long.valueOf(userToUnfollow.getFollowers().size()));
+            user.setFollowingCount(user.getFollowingCount()-1);
+            userRepository.save(user);
+            userRepository.save(userToUnfollow);
+        }else {
+            return new MessageDto("Fail");
+        }
+        return new MessageDto("Success");
+    }
+
+    public Set<User> getFollowers(String username) {
+        User user = userRepository.findByUsername(username).orElseThrow();
+        return user.getFollowers();
+    }
+
+    public List<User> getFollowing(String username) {
+        User user = userRepository.findByUsername(username).orElseThrow();
+        return userRepository.findByFollowers_Username(user.getUsername());
+    }
+
+    public List<Post> getFeed(UserFollowDTO userToGetFeed) {
+        User user = userRepository.findById(userToGetFeed.getId()).orElseThrow();
+        return postRepository.findByAuthor_Followers_UsernameIgnoreCase(user.getUsername());
+    }
+
+    public boolean doesExist(UserExist user) {
+        return userRepository.existsByUsername(user.getUsername());
+    }
+
+    public boolean doesExist(UserEmailExist user) {
+        return userRepository.existsByEmail(user.getEmail());
     }
 }
