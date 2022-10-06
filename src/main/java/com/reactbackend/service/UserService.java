@@ -67,9 +67,13 @@ public class UserService implements UserDetailsService {
         return userToReturn;
     }
 
-    public User getProfile(String username) {
+    public User getProfile(String username, UserFollowDTO whoVisits) {
         User user = userRepository.findByUsername(username).orElseThrow(() -> new UsernameNotFoundException(username));
         user.setAvatar("https://gravatar.com/avatar/b9408a09298632b5151200f3449434ef?s=128");
+        User userWhoVisits = userRepository.findById(whoVisits.getId()).orElseThrow();
+        if(user.getFollowers().contains(userWhoVisits)){
+            user.setFollowing(true);
+        }
         user.setPostCount(postRepository.countByAuthor(user));
         return user;
     }

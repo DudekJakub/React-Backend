@@ -33,8 +33,8 @@ public class UserController {
     }
 
     @PostMapping("/profile/{username}")
-    public User getProfile(@PathVariable String username){
-        return userService.getProfile(username);
+    public User getProfile(@PathVariable String username, @RequestBody UserFollowDTO whoVisits){
+        return userService.getProfile(username, whoVisits);
     }
 
     @GetMapping("/profile/{username}/posts")
