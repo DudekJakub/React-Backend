@@ -63,13 +63,15 @@ public class UserController {
     public List<Post> getFeed(@RequestBody UserFollowDTO user){
         return userService.getFeed(user);
     }
-    @PostMapping("/doesUsernameExist")
-    public boolean doesExist(@RequestBody UserExist user){
-        return userService.doesExist(user);
+
+    @GetMapping("/doesUsernameExist")
+    public boolean doesUsernameExist(@RequestParam String username){
+        return userService.doesExist(username);
     }
-    @PostMapping("/doesEmailExist")
-    public boolean doesEmailExist(@RequestBody UserEmailExist user){
-        return userService.doesExist(user);
+
+    @GetMapping("/doesEmailExist")
+    public boolean doesEmailExist(@RequestParam String email){
+        return userService.doesExistByEmail(email);
     }
     @GetMapping("/list")
     public List<User> showUsers(){

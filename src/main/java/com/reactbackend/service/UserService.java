@@ -137,8 +137,11 @@ public class UserService implements UserDetailsService {
     public boolean doesExist(UserExist user) {
         return userRepository.existsByUsername(user.getUsername());
     }
+    public boolean doesExist(String username) {
+        return userRepository.existsByUsername(username);
+    }
 
-    public boolean doesExist(UserEmailExist user) {
-        return userRepository.existsByEmail(user.getEmail());
+    public boolean doesExistByEmail(String email) {
+        return userRepository.existsByEmail(email);
     }
 }
