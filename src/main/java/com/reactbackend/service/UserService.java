@@ -133,11 +133,8 @@ public class UserService implements UserDetailsService {
         User user = userRepository.findById(userToGetFeed.getId()).orElseThrow();
         return postRepository.findByAuthor_Followers_UsernameIgnoreCase(user.getUsername());
     }
-
-    public boolean doesExist(UserExist user) {
-        return userRepository.existsByUsername(user.getUsername());
-    }
-    public boolean doesExist(String username) {
+    
+    public boolean doesExistByUsername(String username) {
         return userRepository.existsByUsername(username);
     }
 

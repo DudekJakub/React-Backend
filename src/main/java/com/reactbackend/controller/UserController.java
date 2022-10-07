@@ -66,7 +66,7 @@ public class UserController {
 
     @GetMapping("/doesUsernameExist")
     public boolean doesUsernameExist(@RequestParam String username){
-        return userService.doesExist(username);
+        return userService.doesExistByUsername(username);
     }
 
     @GetMapping("/doesEmailExist")
