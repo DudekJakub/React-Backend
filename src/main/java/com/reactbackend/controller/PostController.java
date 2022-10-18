@@ -51,6 +51,4 @@ public class PostController {
     public List<Post> showPosts(){
         return postService.showPosts();
     }
-
-
 }

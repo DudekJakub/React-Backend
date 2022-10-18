@@ -4,12 +4,16 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
+import org.hibernate.annotations.ColumnDefault;
+import org.springframework.boot.context.properties.bind.DefaultValue;
 
 import javax.persistence.*;
 import java.util.Objects;
 import java.util.Set;
 
 @Entity
+@ToString
 @Table(name = "custom_user")
 @Getter
 @Setter
@@ -27,8 +31,10 @@ public class User {
     @Column(name = "is_following")
     private boolean isFollowing;
     private Long postCount;
-    private Long followerCount;
-    private Long followingCount;
+    private Long followerCount = 0L;
+    private Long followingCount = 0L;
+
+    @ToString.Exclude
     @JsonIgnore
     @ManyToMany
     @JoinTable(
@@ -60,15 +66,15 @@ public class User {
         return Objects.hash(id, username, email, password);
     }
 
-    @Override
-    public String toString() {
-        return "User{" +
-                "id=" + id +
-                ", username='" + username + '\'' +
-                ", email='" + email + '\'' +
-                ", postCount=" + postCount +
-                ", followerCount=" + followerCount +
-                ", followingCount=" + followingCount +
-                '}';
-    }
+//    @Override
+//    public String toString() {
+//        return "User{" +
+//                "id=" + id +
+//                ", username='" + username + '\'' +
+//                ", email='" + email + '\'' +
+//                ", postCount=" + postCount +
+//                ", followerCount=" + followerCount +
+//                ", followingCount=" + followingCount +
+//                '}';
+//    }
 }

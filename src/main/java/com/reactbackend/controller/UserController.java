@@ -5,12 +5,14 @@ import com.reactbackend.model.Post.Post;
 import com.reactbackend.model.User.*;
 import com.reactbackend.service.UserService;
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Set;
 
+@Slf4j
 @RestController
 @RequestMapping("/api/user")
 @AllArgsConstructor
@@ -54,6 +56,7 @@ public class UserController {
     public Set<User> getFollowers(@PathVariable String username){
         return userService.getFollowers(username);
     }
+
     @GetMapping("/profile/{username}/following")
     public List<User> getFollowing(@PathVariable String username){
         return userService.getFollowing(username);
@@ -63,14 +66,17 @@ public class UserController {
     public List<Post> getFeed(@RequestBody UserFollowDTO user){
         return userService.getFeed(user);
     }
-    @PostMapping("/doesUsernameExist")
-    public boolean doesExist(@RequestBody UserExist user){
-        return userService.doesExist(user);
+
+    @GetMapping("/doesUsernameExist")
+    public boolean doesUsernameExist(@RequestParam String username){
+        return userService.doesExistByUsername(username);
     }
-    @PostMapping("/doesEmailExist")
-    public boolean doesEmailExist(@RequestBody UserEmailExist user){
-        return userService.doesExist(user);
+
+    @GetMapping("/doesEmailExist")
+    public boolean doesEmailExist(@RequestParam String email){
+        return userService.doesExistByEmail(email);
     }
+
     @GetMapping("/list")
     public List<User> showUsers(){
         return userService.showUsers();

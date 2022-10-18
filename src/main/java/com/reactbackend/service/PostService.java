@@ -12,9 +12,11 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
+import javax.transaction.Transactional;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 @Service
 @AllArgsConstructor
@@ -44,11 +46,17 @@ public class PostService {
     }
 
     public Post showPost(Long id) {
-        return postRepository.findById(id).orElseThrow();
+        return postRepository.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
     }
 
+    @Transactional
     public Post editPost(Long id, PostRequest post) {
-        Post postToUpdate = postRepository.findById(id).orElseThrow();
+        Post postToUpdate = postRepository.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+
+        if (!Objects.equals(postToUpdate.getAuthor().getId(), post.getAuthorId())) {
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED);
+        }
+
         postToUpdate.setBody(post.getBody());
         postToUpdate.setTitle(post.getTitle());
         return postRepository.save(postToUpdate);
@@ -66,6 +74,7 @@ public class PostService {
     }
 
     public List<Post> searchForPosts(SearchTerm searchTerm) {
+        System.out.println(searchTerm);
         return postRepository.findByTitleContainsIgnoreCaseOrBodyContainsIgnoreCase(searchTerm.getTerm(), searchTerm.getTerm());
     }
 }
